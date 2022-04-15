@@ -11,7 +11,17 @@ class Path(object):
     def initRandomGraph(self):
         # create a random graph
         self._graph = nx.barabasi_albert_graph(randint(10,20),randint(1,5))
-        print(self._graph.nodes)
+    
+    def setStartingPheromones(self, value):
+        for n in self._graph:
+            for e in self._graph[n]:
+                self._graph[n][e]['pheromone'] = value
+        
+        pass
+
+    #return the pheromone for the edge between nodeA and nodeB
+    def getPheromone(self,nodeA,nodeB):
+        return self._graph[nodeA][nodeB]['pheromone']    
 
     def _setStartNode(self):
         self._startnode = randint(0,self._graph.number_of_nodes()-1)
