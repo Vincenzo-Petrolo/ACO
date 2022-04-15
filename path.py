@@ -1,16 +1,18 @@
+from platform import node
 from random import randint, random
 import networkx as nx
 import matplotlib.pyplot as plt
 
 
 class Path(object):
-    def __init__(self) -> None:
+    def __init__(self,evaporation_rate = 0) -> None:
         # create an empty graph
         self._graph = nx.Graph()
+        self._evaporationRate = evaporation_rate
     
     def initRandomGraph(self):
         # create a random graph
-        self._graph = nx.barabasi_albert_graph(randint(10,20),randint(1,5))
+        self._graph = nx.gnp_random_graph(randint(5,10),0.5)
     
     def setStartingPheromones(self, value):
         for n in self._graph:
@@ -18,6 +20,12 @@ class Path(object):
                 self._graph[n][e]['pheromone'] = value
         
         pass
+
+    def setRandomEdgesLength(self,min,max):
+        for n in self._graph:
+            for e in self._graph[n]:
+                self._graph[n][e]['length'] = randint(min,max)
+        
 
     #return the pheromone for the edge between nodeA and nodeB
     def getPheromone(self,nodeA,nodeB):
@@ -49,3 +57,26 @@ class Path(object):
         # draw the edges
         nx.draw_networkx_edges(self._graph, layout, alpha=1, width=1)
         plt.show()
+    
+    def getStartNode(self):
+        return self._startnode
+    
+    def getStopNode(self):
+        return self._stopnode
+
+    # returns a dictionary with neighboor nodes
+    def getNeighboors(self, node):
+        return self._graph.adj[node]
+    
+    # update the quantity of pheromone on a given edge using the following formula
+    # the pheromone input is the sum of the pheromones
+    def updatePheromone(self,ants):
+        for edge in self._graph.edges:
+            # calculate the sum of pheromones for all ants
+            sum_of_pheromones = 0
+            for ant in ants:
+                sum_of_pheromones += ant.edgePassed(edge[0],edge[1])
+            self._graph[edge[0]][edge[1]]['pheromone'] += self._graph[edge[0]][edge[1]]['pheromone']*(1-self._evaporationRate) + sum_of_pheromones
+
+    def __str__(self) -> str:
+        return str(self._graph)

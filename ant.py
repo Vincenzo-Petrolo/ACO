@@ -1,4 +1,4 @@
-from tracemalloc import start
+import path
 
 
 class Ant(object):
@@ -29,15 +29,11 @@ class Ant(object):
         probabilities = {}
         for node in nextNodes:
             # compute the probability
-            if (node not in self._path_taken):
-                if (denominator != 0):
-                    # denominator is 0 at first run
-                    probabilities[node] = nextNodes[node]['pheromone']/nextNodes[node]['length']/denominator
-                else:
-                    probabilities[node] = 0
-            else:
-                # if node was not already taken
+            if (node in self._path_taken):
                 probabilities[node] = 0
+            else:
+                probabilities[node] = nextNodes[node]['pheromone']/nextNodes[node]['length']/denominator
+
 
         node_with_highest_prob = 0
         highest_probability = 0
@@ -72,9 +68,18 @@ class Ant(object):
         else:
             return 0
     
+    def edgePassed(self,nodeA,nodeB):
+        for i in range(0,len(self._path_taken)-1):
+            if (self._path_taken[i] == nodeA and self._path_taken[i+1] == nodeB):
+                # if the edge correspond then return the pheromone of the ant
+                return self.getPheromone()
+        
+        return 0
+
+    
     def __str__(self) -> str:
-        tmp_str = "Ant traveled nodes: " + str(self._path_taken()) + "\n"
-        tmp_str += "Traveled distance: " + str(self._tourLength)
-        tmp_str += "Reached: " + str(self.-_reached)
+        tmp_str = "Ant traveled nodes: " + str(self._path_taken) + "\n"
+        tmp_str += "Traveled distance: " + str(self._tourLength) + "\n"
+        tmp_str += "Reached: " + str(self._reached)
 
         return tmp_str
