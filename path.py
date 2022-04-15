@@ -55,7 +55,16 @@ class Path(object):
         # draw the ending node
         nx.draw_networkx_nodes(self._graph,layout,node_size=300,nodelist=[self._stopnode],node_color='tab:orange')
         # draw the edges
-        nx.draw_networkx_edges(self._graph, layout, alpha=1, width=1)
+        for edge in self._graph.edges:
+            edge_width = 1*self._graph[edge[0]][edge[1]]['pheromone']
+            nx.draw_networkx_edges(self._graph, layout,edgelist = [edge], alpha=1, width=edge_width)
+        # draw labels for nodes
+        labels = {}
+        for node in self._graph:
+            labels[node] = str(node)
+        
+        nx.draw_networkx_labels(self._graph,layout,labels)
+
         plt.show()
     
     def getStartNode(self):
@@ -79,4 +88,8 @@ class Path(object):
             self._graph[edge[0]][edge[1]]['pheromone'] += self._graph[edge[0]][edge[1]]['pheromone']*(1-self._evaporationRate) + sum_of_pheromones
 
     def __str__(self) -> str:
-        return str(self._graph)
+        tmp_str = "The graph is made of the following nodes\n"
+        for node in self._graph:
+            tmp_str += str(self._graph[node])
+
+        return tmp_str
