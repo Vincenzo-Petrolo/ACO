@@ -1,4 +1,5 @@
 import path
+import random
 
 
 class Ant(object):
@@ -17,6 +18,8 @@ class Ant(object):
 
     # receives a dictionary with the nodes and their attributes
     def nextNode(self, nextNodes):
+        # TODO the path should be chosen randomly, otherwise all the ants will perform
+        # the same choice if multiple are presented
 
         if (self._reached == True):
             # don't do anything if already arrived
@@ -26,33 +29,29 @@ class Ant(object):
         for node in nextNodes:
             denominator += nextNodes[node]['pheromone']/nextNodes[node]['length']
         # for each node create a probability and choose the highest value
-        probabilities = {}
+        probabilities = []
+        nodes = []
         for node in nextNodes:
+            nodes.append(node)
             # compute the probability
             if (node in self._path_taken):
-                probabilities[node] = 0
+                probabilities.append(0)
             else:
-                probabilities[node] = nextNodes[node]['pheromone']/nextNodes[node]['length']/denominator
+                probabilities.append(nextNodes[node]['pheromone']/nextNodes[node]['length']/denominator)
 
 
-        node_with_highest_prob = 0
-        highest_probability = 0
-
-        for node in probabilities:
-            if (probabilities[node] >= highest_probability):
-                highest_probability = probabilities[node]
-                node_with_highest_prob = node
-        
+        node_with_highest_prob = random.choices(nodes,probabilities,k=1)
         # at the end the next node to be chosen is found and I add to my path
 
-        self._path_taken.append(node_with_highest_prob)
-        if (node_with_highest_prob == self._stopNode):
+        self._path_taken.append(node_with_highest_prob[0])
+        
+        if (node_with_highest_prob[0] == self._stopNode):
             self._reached = True
-            print("Reached my goal")
+            #print("Reached my goal")
 
-        print(f"New node is {node_with_highest_prob}")
+        # print(f"New node is {node_with_highest_prob}")
         # update traveled distance
-        self._tourLength += nextNodes[node_with_highest_prob]['length']
+        self._tourLength += nextNodes[node_with_highest_prob[0]]['length']
 
     def getPath(self):
         return self._path_taken

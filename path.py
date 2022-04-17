@@ -64,6 +64,8 @@ class Path(object):
             labels[node] = str(node)
         
         nx.draw_networkx_labels(self._graph,layout,labels)
+        # draw labels for edges
+        #nx.draw_networkx_edge_labels(self._graph,layout,font_size = 5)
 
         plt.show()
     
