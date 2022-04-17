@@ -18,9 +18,6 @@ class Ant(object):
 
     # receives a dictionary with the nodes and their attributes
     def nextNode(self, nextNodes):
-        # TODO the path should be chosen randomly, otherwise all the ants will perform
-        # the same choice if multiple are presented
-
         if (self._reached == True):
             # don't do anything if already arrived
             return
@@ -38,18 +35,24 @@ class Ant(object):
                 probabilities.append(0)
             else:
                 probabilities.append(nextNodes[node]['pheromone']/nextNodes[node]['length']/denominator)
+        
+        all_zero = True
+        for probability in probabilities:
+            if (probability != 0):
+                all_zero = False
+        if (all_zero == True):
+            #assign random probabilities to perform a random choice
+            for i in range(0,len(probabilities)):
+                probabilities[i] = random.random()
 
-
+        #print(f"Nodes: {nodes}\nProbabilities: {probabilities}")
         node_with_highest_prob = random.choices(nodes,probabilities,k=1)
-        # at the end the next node to be chosen is found and I add to my path
 
         self._path_taken.append(node_with_highest_prob[0])
-        
+
         if (node_with_highest_prob[0] == self._stopNode):
             self._reached = True
-            #print("Reached my goal")
 
-        # print(f"New node is {node_with_highest_prob}")
         # update traveled distance
         self._tourLength += nextNodes[node_with_highest_prob[0]]['length']
 
@@ -63,7 +66,7 @@ class Ant(object):
     #it completed a travel
     def getPheromone(self):
         if (self._reached == True):
-            return 1/self._tourLength
+            return 5/self._tourLength
         else:
             return 0
     
@@ -71,14 +74,16 @@ class Ant(object):
         for i in range(0,len(self._path_taken)-1):
             if (self._path_taken[i] == nodeA and self._path_taken[i+1] == nodeB):
                 # if the edge correspond then return the pheromone of the ant
+                # print(f"Pheromone: {self.getPheromone()}")
                 return self.getPheromone()
         
         return 0
 
     
     def __str__(self) -> str:
-        tmp_str = "Ant traveled nodes: " + str(self._path_taken) + "\n"
+        tmp_str = "\n===================================================\n"
+        tmp_str += "Ant traveled nodes: " + str(self._path_taken) + "\n"
         tmp_str += "Traveled distance: " + str(self._tourLength) + "\n"
         tmp_str += "Reached: " + str(self._reached)
-
+        tmp_str += "\n===================================================\n"
         return tmp_str

@@ -4,30 +4,18 @@ import path
 
 def main():
     p = path.Path(evaporation_rate=0.2)
-    p.initRandomGraph()
-    p.setStartStop()
+    p.initRandomGraph(number_of_nodes=24,degree=3)
+    p.setStartStop(0,23)
     p.setStartingPheromones(1)
-    p.setRandomEdgesLength(1,5)
+    p.setEdgesLength(1)
 
-    acs = AntColonySystem(p,10)
-    while(acs.finished() == False):
-        acs.step()
-        # acs.showSolution()
-    acs.updatePheromone()
-
-    acs = AntColonySystem(p, 10)
-
-    while(acs.finished() == False):
-        acs.step()
-    acs.updatePheromone()
-
-    acs = AntColonySystem(p, 10)
-
-    while(acs.finished() == False):
-        acs.step()
-    acs.updatePheromone()
-
-    acs.showSolution()
+    for i in range(0,100):
+        acs = AntColonySystem(p,100)
+        while(acs.finished() == False):
+            acs.step()
+        acs.updatePheromone()
+        acs.showSolution()
+        print(f"Run #{i}")
 
 if __name__ == "__main__":
     main()

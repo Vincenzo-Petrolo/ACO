@@ -31,7 +31,7 @@ class AntColonySystem(object):
             if (ant.goalReached() == False):
                 nextNodes = self._path.getNeighboors(ant.getCurrentNode())
                 ant.nextNode(nextNodes)
-                print(ant)
+                #print(ant)
     
     def finished(self):
         return self._end
