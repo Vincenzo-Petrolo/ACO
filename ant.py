@@ -45,9 +45,11 @@ class Ant(object):
             for i in range(0,len(probabilities)):
                 probabilities[i] = random.random()
 
-        #print(f"Nodes: {nodes}\nProbabilities: {probabilities}")
+        
         node_with_highest_prob = random.choices(nodes,probabilities,k=1)
-
+        
+        #print(f"Nodes: {nodes}\nProbabilities: {probabilities}\nChoosen : {node_with_highest_prob[0]}")
+        
         self._path_taken.append(node_with_highest_prob[0])
 
         if (node_with_highest_prob[0] == self._stopNode):
@@ -66,7 +68,7 @@ class Ant(object):
     #it completed a travel
     def getPheromone(self):
         if (self._reached == True):
-            return 5/self._tourLength
+            return 2/self._tourLength
         else:
             return 0
     

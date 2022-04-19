@@ -67,7 +67,7 @@ class Path(object):
         nx.draw_networkx_nodes(self._graph,self._layout,node_size=3000/len(self._graph.nodes),nodelist=[self._stopnode],node_color='tab:orange')
         # draw the edges
         for edge in self._graph.edges:
-            edge_width = 1+ int(self._graph[edge[0]][edge[1]]['pheromone'])
+            edge_width = 1+ int(self._graph[edge[0]][edge[1]]['pheromone'])/10
             nx.draw_networkx_edges(self._graph, self._layout,edgelist = [edge], alpha=1, width=edge_width)
         # draw labels for nodes
         labels = {}
@@ -76,7 +76,7 @@ class Path(object):
         
         nx.draw_networkx_labels(self._graph,self._layout,labels)
         # draw labels for edges
-        #nx.draw_networkx_edge_labels(self._graph,layout,font_size = 5)
+        # nx.draw_networkx_edge_labels(self._graph,self._layout,font_size = 5)
 
         # plt.show()
         plt.savefig(f"photogram/pic{self._photogram_count}.png",dpi=500)
